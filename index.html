@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบริหารงบประมาณส่วนบุคคล</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="card mb-4">
+            <div class="card-header">
+                <img src="/เงินเดือน.svg" alt="เงินเดือน">
+                <div>
+                    <h2 class="card-title">เงินเดือน</h2>
+                    <p class="card-subtitle">ระบุเงินเดือนที่ต้องการคำนวณ</p>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="inputsalary">
+                    <input type="number" id="salary" placeholder="ใส่เงินเดือนของคุณ">
+                </div>
+            </div>
+        </div>
+
+        <div id="categories">
+            <!-- หมวดหมู่ต่างๆ จะถูกเพิ่มที่นี่โดย JavaScript -->
+        </div>
+
+        <div id="alert" class="alert" style="display: none;">
+            <!-- ข้อความแจ้งเตือนจะปรากฏที่นี่ -->
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title">สรุป</h2>
+            </div>
+            <div id="summary" class="card-content">
+                <!-- ข้อมูลสรุปจะปรากฏที่นี่ -->
+            </div>
+            <div id="status" class="mb-2">
+                <!-- สถานะจะปรากฏที่นี่ -->
+            </div>
+        </div>
+
+        <button id="saveButton">บันทึกข้อมูล</button>
+
+        <div class="card">
+            <div class="card-header">
+                <h2 class="card-title">แผนภูมิการแบ่งงบประมาณ</h2>
+            </div>
+            <div class="card-content">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+
+        <button id="saveStatsButton" class="btn btn-primary">บันทึกสถิติ</button>
+
+        <!-- Modal สำหรับบันทึกสถิติ -->
+        <div id="saveStatsModal" class="modal">
+            <div class="modal-content">
+                <h2>บันทึกสถิติ</h2>
+                <input type="text" id="monthName" placeholder="ชื่อเดือน">
+                <button id="confirmSaveStats">บันทึก</button>
+                <button id="cancelSaveStats">ยกเลิก</button>
+            </div>
+        </div>
+
+        <!-- ส่วนแสดงสถิติที่บันทึกไว้ -->
+        <div id="savedStatsContainer" class="card mb-4">
+            <div class="card-header">
+                <h2 class="card-title">สถิติที่บันทึกไว้</h2>
+            </div>
+            <div class="card-content" id="savedStatsList">
+                <!-- สถิติที่บันทึกไว้จะปรากฏที่นี่ -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
