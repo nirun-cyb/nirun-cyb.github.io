@@ -4,79 +4,190 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบบริหารงบประมาณส่วนบุคคล</title>
+    <title>Budget Planner</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./node_modules/preline/dist/preline.js"></script>
+
+
 </head>
 
-<body>
-    <div class="container">
-        <div class="card mb-4">
-            <div class="card-header">
-                <img src="/เงินเดือน.svg" alt="เงินเดือน">
-                <div>
-                    <h2 class="card-title">เงินเดือน</h2>
-                    <p class="card-subtitle">ระบุเงินเดือนที่ต้องการคำนวณ</p>
+<body class="w-full flex flex-col bg-gray-100 px-20 py-10 justify-center items-center">
+
+    <div class="flex flex-row justify-start items-start gap-x-10 max-w-7xl">
+
+        <!-- ก้อนซ้าย -->
+        <div class="flex flex-col w-full">
+
+            <div class="w-full flex flex-col gap-3 items-start" id="categories">
+                <!-- หนี้สิน -->
+
+                <div class="bg-white w-full border rounded-lg 	">
+                    <div class="flex flex-row p-5 border-b	">
+                        <img class="mr-3" src="/เงินเดือน.svg" alt="เงินเดือน">
+                        <div>
+                            <h2 class="headtext">เงินเดือน</h2>
+                            <p class="subtext">ระบุเงินเดือนที่ต้องการคำนวณ</p>
+                        </div>
+                    </div>
+
+                    <div class="p-5	">
+                        <div class="">
+                            <input type="number" id="salary" placeholder="ระบุเงินเดือน">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center items-center w-full  border rounded-lg bg-white">
+                    <div class="flex flex-row p-5 border-b w-full">
+                        <img class="mr-3" src="/icon/หนี้สิน.svg" alt="">
+                        <div>
+                            <h2 class="headtext">หนี้สิน</h2>
+                            <p class="subtext">เพิ่มรายการหนี้สินที่ต้องจ่ายในเดือนนี้</p>
+                        </div>
+                    </div>
+
+                    <div class="card-content  w-full p-5">
+                        <div class="flex flex-col items-center gap w-full" id="items-0"></div>
+                        <button onclick="addItem(0)" type="button"
+                            class="font-button py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            เพิ่มรายการ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- คืนตัวเอง -->
+
+                <div class="flex flex-col justify-center items-center w-full  border rounded-lg bg-white">
+                    <div class="flex flex-row p-5 border-b w-full">
+                        <img class="mr-3" src="/icon/คืนเงินตัวเอง.svg" alt="">
+                        <div>
+                            <h2 class="headtext">คืนตัวเอง</h2>
+                            <p class="subtext">เพิ่มรายการคืนเงินตัวเองในเดือนนี้</p>
+                        </div>
+                    </div>
+
+                    <div class="card-content w-full p-5">
+                        <div class="flex flex-col items-center gap w-full" id="items-1"></div>
+                        <button onclick="addItem(1)" type="button"
+                            class="font-button py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            เพิ่มรายการ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- การลงทุน -->
+                <div class="flex flex-col justify-center items-center w-full  border rounded-lg bg-white">
+                    <div class="flex flex-row p-5 border-b w-full">
+                        <img class="mr-3" src="/icon/การลงทุน.svg" alt="">
+                        <div>
+                            <h2 class="headtext">การลงทุน</h2>
+                            <p class="subtext">เพิ่มรายการลงทุนในเดือนนี้</p>
+                        </div>
+                    </div>
+
+                    <div class="card-content w-full p-5">
+                        <div class="flex flex-col items-center gap w-full" id="items-2"></div>
+                        <button onclick="addItem(2)" type="button"
+                            class="font-button py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            เพิ่มรายการ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ค่าใช้จ่าย -->
+                <div class="flex flex-col justify-center items-center w-full  border rounded-lg bg-white">
+                    <div class="flex flex-row p-5 border-b w-full">
+                        <img class="mr-3" src="/icon/ค่าใช้จ่ายในเดือน.svg" alt="">
+                        <div>
+                            <h2 class="headtext">ค่าใช้จ่าย</h2>
+                            <p class="subtext">เพิ่มรายการคืนเงินตัวเอง</p>
+                        </div>
+                    </div>
+
+                    <div class="card-content w-full p-5">
+                        <div class="flex flex-col items-center gap w-full" id="items-3"></div>
+                        <button onclick="addItem(3)" type="button"
+                            class="font-button py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            เพิ่มรายการ
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- เงินออม -->
+                <div class="flex flex-col justify-center items-center w-full  border rounded-lg bg-white">
+                    <div class="flex flex-row p-5 border-b w-full">
+                        <img class="mr-3" src="/icon/เงินออม.svg" alt="">
+                        <div>
+                            <h2 class="headtext">เงินออม</h2>
+                            <p class="subtext">เพิ่มรายการคืนเงินตัวเอง</p>
+                        </div>
+                    </div>
+
+                    <div class="card-content w-full p-5">
+                        <div class="flex flex-col items-center gap w-full" id="items-4"></div>
+                        <button onclick="addItem(4)" type="button"
+                            class="font-button py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            เพิ่มรายการ
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="card-content">
-                <div class="inputsalary">
-                    <input type="number" id="salary" placeholder="ใส่เงินเดือนของคุณ">
+
+            <div id="alert" class="alert" style="display: none;"></div>
+
+        </div>
+
+        <!-- ก้อนขวา -->
+        <div class="flex flex-col gap-3 ">
+
+            <!-- กราฟ -->
+            <div class=" w-full bg-white">
+                <div class="card-header bg">
+                    <h2 class="card-title">แผนภูมิการแบ่งงบประมาณ</h2>
+                </div>
+                <div class="card-content">
+                    <canvas id="pieChart"></canvas>
                 </div>
             </div>
-        </div>
 
-        <div id="categories">
-            <!-- หมวดหมู่ต่างๆ จะถูกเพิ่มที่นี่โดย JavaScript -->
-        </div>
-
-        <div id="alert" class="alert" style="display: none;">
-            <!-- ข้อความแจ้งเตือนจะปรากฏที่นี่ -->
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h2 class="card-title">สรุป</h2>
+            <div class="bg-white rounded-lg border">
+                <div class="p-5  border-b">
+                    <h2 class="card-title">สรุป</h2>
+                </div>
+                <div clas id="summary" class="card-content max-w-5xl detail-sum"></div>
+                <div id="status" class="mb-2"></div>
             </div>
-            <div id="summary" class="card-content">
-                <!-- ข้อมูลสรุปจะปรากฏที่นี่ -->
-            </div>
-            <div id="status" class="mb-2">
-                <!-- สถานะจะปรากฏที่นี่ -->
-            </div>
-        </div>
 
-        <button id="saveButton">บันทึกข้อมูล</button>
+            <button id="saveButton" type="button"
+                class="font-button w-full justify-center py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                บันทึกข้อมูล
+            </button>
 
-        <div class="card">
-            <div class="card-header">
-                <h2 class="card-title">แผนภูมิการแบ่งงบประมาณ</h2>
+            <button id="saveStatsButton" type="button"
+                class="font-button w-full justify-center py-3 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-emerald-600 text-white hover:bg-emerald-700 focus:outline-none focus:bg-emerald-700 disabled:opacity-50 disabled:pointer-events-none">
+                บันทึกสถิติ
+            </button>
+
+
+            <div id="saveStatsModal" class="modal">
+                <div class="modal-content">
+                    <h2>บันทึกสถิติ</h2>
+                    <input type="text" id="monthName" placeholder="ชื่อเดือน">
+                    <button id="confirmSaveStats">บันทึก</button>
+                    <button id="cancelSaveStats">ยกเลิก</button>
+                </div>
             </div>
-            <div class="card-content">
-                <canvas id="pieChart"></canvas>
-            </div>
-        </div>
 
-        <button id="saveStatsButton" class="btn btn-primary">บันทึกสถิติ</button>
-
-        <!-- Modal สำหรับบันทึกสถิติ -->
-        <div id="saveStatsModal" class="modal">
-            <div class="modal-content">
-                <h2>บันทึกสถิติ</h2>
-                <input type="text" id="monthName" placeholder="ชื่อเดือน">
-                <button id="confirmSaveStats">บันทึก</button>
-                <button id="cancelSaveStats">ยกเลิก</button>
+            <div id="savedStatsContainer" class="card mb-4">
+                <div class="card-header">
+                    <h2 class="card-title">สถิติที่บันทึกไว้</h2>
+                </div>
+                <div id="savedStatsList" class="card-content"></div>
             </div>
         </div>
 
-        <!-- ส่วนแสดงสถิติที่บันทึกไว้ -->
-        <div id="savedStatsContainer" class="card mb-4">
-            <div class="card-header">
-                <h2 class="card-title">สถิติที่บันทึกไว้</h2>
-            </div>
-            <div class="card-content" id="savedStatsList">
-                <!-- สถิติที่บันทึกไว้จะปรากฏที่นี่ -->
-            </div>
-        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

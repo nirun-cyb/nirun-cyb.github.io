@@ -12,47 +12,42 @@ document.addEventListener('DOMContentLoaded', function() {
         categories: categories.map(cat => ({ ...cat, items: [] }))
     };
 
-    function renderCategories() {
-        const categoriesContainer = document.getElementById('categories');
-        categoriesContainer.innerHTML = '';
-
-        state.categories.forEach((category, categoryIndex) => {
-            const categoryElement = document.createElement('div');
-            categoryElement.className = 'card mb-4';
-            categoryElement.innerHTML = `
-                <div class="card-header">
-                    <h2 class="card-title" style="color: ${category.color}">${category.name}</h2>
-                </div>
-                <div class="card-content">
-                    <div id="items-${categoryIndex}"></div>
-                    <button onclick="addItem(${categoryIndex})">เพิ่มรายการ</button>
-                </div>
-            `;
-            categoriesContainer.appendChild(categoryElement);
-
-            renderItems(categoryIndex);
-        });
-    }
-
     function renderItems(categoryIndex) {
         const itemsContainer = document.getElementById(`items-${categoryIndex}`);
         itemsContainer.innerHTML = '';
 
         state.categories[categoryIndex].items.forEach((item, itemIndex) => {
             const itemElement = document.createElement('div');
-            itemElement.className = 'flex mb-2';
+            itemElement.className = 'flex flex-row w-full gap-2 mb-3';
             itemElement.innerHTML = `
-                <input type="text" class="flex-grow mr-2" value="${item.name}" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'name', this.value)" placeholder="ชื่อรายการ">
+
+                <div class="w-full space-y-3">
+                    <input type="text" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
+                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    placeholder="ชื่อรายการ" value="${item.name}" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'name', this.value)">
+                </div>
                 ${state.categories[categoryIndex].allowPercentage ? `
-                    <select class="mr-2" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'type', this.value)">
+                     
+
+                    <select class="rounded-md h-9" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'type', this.value)">
                         <option value="fixed" ${item.type === 'fixed' ? 'selected' : ''}>จำนวนเงินคงที่</option>
                         <option value="percentage" ${item.type === 'percentage' ? 'selected' : ''}>เปอร์เซ็นต์</option>
                     </select>
                 ` : ''}
-                <input type="number" class="mr-2" style="width: 100px;" value="${item.type === 'percentage' ? item.percentage : item.amount}" 
-                       onchange="updateItem(${categoryIndex}, ${itemIndex}, '${item.type === 'percentage' ? 'percentage' : 'amount'}', parseFloat(this.value) || 0)"
-                       placeholder="${item.type === 'percentage' ? '%' : 'บาท'}">
-                <button onclick="removeItem(${categoryIndex}, ${itemIndex})">ลบ</button>
+
+                <div class="w-full">
+                    <input type="text" class=" py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
+                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    placeholder="This is placeholder" value="${item.type === 'percentage' ? item.percentage : item.amount}" 
+                       onchange="updateItem(${categoryIndex}, ${itemIndex}, '${item.type === 'percentage' ? 'percentage' : 'amount'}', parseFloat(this.value) || 0)">
+                </div>    
+
+                
+                <button onclick="removeItem(${categoryIndex}, ${itemIndex})" type="button fill-white"
+                    class=" flex shrink-0 justify-center items-center gap-2 size-[40px] text-sm font-medium rounded-lg border border-transparent bg-white text-white hover:bg-gray-100 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <img class="filter-to-white size-[20px]" src="/icon/minus-circle.svg" alt="">
+                </button>
+
             `;
             itemsContainer.appendChild(itemElement);
         });
@@ -92,14 +87,14 @@ document.addEventListener('DOMContentLoaded', function() {
         state.categories.slice(0, 3).forEach(category => {
             let categoryTotal = 0;
             let categoryHtml = `
-                <div class="summary-category">
-                    <h3>${category.name}</h3>
+                <div class="flex flex-col gap-4 bg-gray-50 summary-category border w-full">
+                    <h3 class="headcat-sum w-full">${category.name}</h3>
             `;
             
             category.items.forEach(item => {
                 const itemAmount = item.amount || 0;
                 categoryTotal += itemAmount;
-                categoryHtml += `<p>${item.name}: ${itemAmount.toFixed(2)} บาท</p>`;
+                categoryHtml += `<p class="border-b pb-2 w-full">${item.name}: ${itemAmount.toFixed(2)} บาท</p>`;
             });
             
             remaining -= categoryTotal;
@@ -111,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // แทรกจำนวนเงินคงเหลือหลังจากหักค่าใช้จ่ายคงที่จากสามหมวดแรก
         summary.splice(3, 0, `
-            <div class="summary-category">
-                <h3>คงเหลือ</h3>
-                <p>${remaining.toFixed(2)} บาท</p>
+            <div class="flex flex-col gap-4 bg-emerald-50 summary-category border w-full summary-category ">
+                <h3 class="headcat-sum w-full">คงเหลือ</h3>
+                <p class="headcat-sum">${remaining.toFixed(2)} บาท</p>
             </div>
         `);
     
@@ -145,18 +140,18 @@ document.addEventListener('DOMContentLoaded', function() {
             state.categories.slice(3).forEach(category => {
                 let categoryTotal = 0;
                 let categoryHtml = `
-                    <div class="summary-category">
-                        <h3>${category.name}</h3>
+                    <div class="flex flex-col gap-4 bg-gray-50 summary-category border w-full">
+                        <h3 class="headcat-sum w-full">${category.name}</h3>
                 `;
     
                 category.items.forEach(item => {
                     let itemAmount;
                     if (item.type === 'fixed') {
                         itemAmount = item.amount || 0;
-                        categoryHtml += `<p>${item.name}: ${itemAmount.toFixed(2)} บาท (คงที่)</p>`;
+                        categoryHtml += `<p class="border-b pb-2 w-full">${item.name}: ${itemAmount.toFixed(2)} บาท (คงที่)</p>`;
                     } else {
                         itemAmount = (item.percentage / 100) * remainingAfterFixed;
-                        categoryHtml += `<p>${item.name}: ${item.percentage}% (${itemAmount.toFixed(2)} บาท)</p>`;
+                        categoryHtml += `<p class="border-b pb-2 w-full">${item.name}: ${item.percentage}% (${itemAmount.toFixed(2)} บาท)</p>`;
                     }
                     categoryTotal += itemAmount;
                 });
@@ -212,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
             state.salary = parsedData.salary;
             state.categories = parsedData.categories;
             document.getElementById('salary').value = state.salary;
-            renderCategories();
+            state.categories.forEach((_, index) => renderItems(index));
             calculate();
         }
     }
@@ -229,7 +224,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('salary').addEventListener('input', calculate);
     document.getElementById('saveButton').addEventListener('click', saveData);
 
-    // เพิ่มฟังก์ชันใหม่สำหรับการบันทึกสถิติ
     const saveStatsButton = document.getElementById('saveStatsButton');
     const saveStatsModal = document.getElementById('saveStatsModal');
     const confirmSaveStats = document.getElementById('confirmSaveStats');
@@ -319,9 +313,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-// เรียกใช้ฟังก์ชันเหล่านี้เพื่อเริ่มต้นการทำงาน
-loadSavedData();
-renderCategories();
-calculate();
-renderSavedStatsList();
+    // เรียกใช้ฟังก์ชันเหล่านี้เพื่อเริ่มต้นการทำงาน
+    loadSavedData();
+    state.categories.forEach((_, index) => renderItems(index));
+    calculate();
+    renderSavedStatsList();
 });
