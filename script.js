@@ -12,47 +12,35 @@ document.addEventListener('DOMContentLoaded', function() {
         categories: categories.map(cat => ({ ...cat, items: [] }))
     };
 
-    function renderCategories() {
-        const categoriesContainer = document.getElementById('categories');
-        categoriesContainer.innerHTML = '';
-
-        state.categories.forEach((category, categoryIndex) => {
-            const categoryElement = document.createElement('div');
-            categoryElement.className = 'card mb-4';
-            categoryElement.innerHTML = `
-                <div class="card-header">
-                    <h2 class="card-title" style="color: ${category.color}">${category.name}</h2>
-                </div>
-                <div class="card-content">
-                    <div id="items-${categoryIndex}"></div>
-                    <button onclick="addItem(${categoryIndex})">เพิ่มรายการ</button>
-                </div>
-            `;
-            categoriesContainer.appendChild(categoryElement);
-
-            renderItems(categoryIndex);
-        });
-    }
-
     function renderItems(categoryIndex) {
         const itemsContainer = document.getElementById(`items-${categoryIndex}`);
         itemsContainer.innerHTML = '';
 
         state.categories[categoryIndex].items.forEach((item, itemIndex) => {
             const itemElement = document.createElement('div');
-            itemElement.className = 'flex mb-2';
+            itemElement.className = 'flex flex-row w-full gap-2 mb-3';
             itemElement.innerHTML = `
-                <input type="text" class="flex-grow mr-2" value="${item.name}" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'name', this.value)" placeholder="ชื่อรายการ">
+                <div class="w-full space-y-3">
+                    <input type="text" class="text-input border py-3 px-4 block w-full border-gray-200 rounded-lg  focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
+                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    placeholder="ชื่อรายการ" value="${item.name}" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'name', this.value)">
+                </div>
                 ${state.categories[categoryIndex].allowPercentage ? `
-                    <select class="mr-2" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'type', this.value)">
+                    <select class="text-input border rounded-md h-11" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'type', this.value)">
                         <option value="fixed" ${item.type === 'fixed' ? 'selected' : ''}>จำนวนเงินคงที่</option>
                         <option value="percentage" ${item.type === 'percentage' ? 'selected' : ''}>เปอร์เซ็นต์</option>
                     </select>
                 ` : ''}
-                <input type="number" class="mr-2" style="width: 100px;" value="${item.type === 'percentage' ? item.percentage : item.amount}" 
-                       onchange="updateItem(${categoryIndex}, ${itemIndex}, '${item.type === 'percentage' ? 'percentage' : 'amount'}', parseFloat(this.value) || 0)"
-                       placeholder="${item.type === 'percentage' ? '%' : 'บาท'}">
-                <button onclick="removeItem(${categoryIndex}, ${itemIndex})">ลบ</button>
+                <div class="w-full">
+                    <input type="text" class="text-input border py-3 px-4 block w-full border-gray-200 rounded-lg  focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
+                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    placeholder="This is placeholder" value="${item.type === 'percentage' ? item.percentage : item.amount}" 
+                       onchange="updateItem(${categoryIndex}, ${itemIndex}, '${item.type === 'percentage' ? 'percentage' : 'amount'}', parseFloat(this.value) || 0)">
+                </div>    
+                <button onclick="removeItem(${categoryIndex}, ${itemIndex})" type="button fill-white"
+                    class=" flex shrink-0 justify-center items-center gap-2 size-[46px] text-sm font-medium rounded-lg border border-transparent bg-white text-white hover:bg-gray-100 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <img class="filter-to-white size-[20px]" src="/icon/minus-circle.svg" alt="">
+                </button>
             `;
             itemsContainer.appendChild(itemElement);
         });
@@ -92,18 +80,25 @@ document.addEventListener('DOMContentLoaded', function() {
         state.categories.slice(0, 3).forEach(category => {
             let categoryTotal = 0;
             let categoryHtml = `
-                <div class="summary-category">
-                    <h3>${category.name}</h3>
+                <div class="p-5 rounded-lg flex flex-col gap-4 bg-gray-50 summary-category border w-full">
+                    <h3 class="headtext w-full">${category.name}</h3>
             `;
             
             category.items.forEach(item => {
                 const itemAmount = item.amount || 0;
                 categoryTotal += itemAmount;
-                categoryHtml += `<p>${item.name}: ${itemAmount.toFixed(2)} บาท</p>`;
+                
+                categoryHtml += `<div class="text-input flex flex-row border-b pb-2 w-full">
+                                    <p class="w-full">${item.name}</p>
+                                    <div class="flex flex-row gap-2">
+                                        <p class=""> ${itemAmount.toFixed(2)}</p>
+                                        <p>บาท</p>                                    
+                                    </div>
+                                </div> `;
             });
             
             remaining -= categoryTotal;
-            categoryHtml += `<p><strong>รวม: ${categoryTotal.toFixed(2)} บาท</strong></p></div>`;
+            categoryHtml += `<p class="headtext flex w-full justify-end">รวม: ${categoryTotal.toFixed(2)} บาท</p></div>`;
             
             summary.push(categoryHtml);
             chartData.push({ name: category.name, value: categoryTotal, color: category.color });
@@ -111,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // แทรกจำนวนเงินคงเหลือหลังจากหักค่าใช้จ่ายคงที่จากสามหมวดแรก
         summary.splice(3, 0, `
-            <div class="summary-category">
-                <h3>คงเหลือ</h3>
-                <p>${remaining.toFixed(2)} บาท</p>
+            <div class="place-items-center p-5 flex flex-col gap-4  bg-emerald-50 border rounded border-emerald-600">
+                <h3 class="headtext-remain">คงเหลือ</h3>
+                <p class="subtext-remain">${remaining.toFixed(2)} บาท</p>
             </div>
         `);
     
@@ -138,33 +133,58 @@ document.addEventListener('DOMContentLoaded', function() {
             alertElement.textContent = 'คำเตือน: ค่าใช้จ่ายคงที่รวมกันเกินหรือเท่ากับงบประมาณคงเหลือ!';
         } else {
             alertElement.style.display = 'none';
-    
+
             const remainingAfterFixed = remaining - fixedExpensesTotal;
-    
-            // คำนวณและแสดงสรุปสำหรับสองหมวดสุดท้าย
-            state.categories.slice(3).forEach(category => {
-                let categoryTotal = 0;
-                let categoryHtml = `
-                    <div class="summary-category">
-                        <h3>${category.name}</h3>
-                `;
-    
-                category.items.forEach(item => {
-                    let itemAmount;
-                    if (item.type === 'fixed') {
-                        itemAmount = item.amount || 0;
-                        categoryHtml += `<p>${item.name}: ${itemAmount.toFixed(2)} บาท (คงที่)</p>`;
-                    } else {
-                        itemAmount = (item.percentage / 100) * remainingAfterFixed;
-                        categoryHtml += `<p>${item.name}: ${item.percentage}% (${itemAmount.toFixed(2)} บาท)</p>`;
-                    }
-                    categoryTotal += itemAmount;
+
+            // คำนวณผลรวมของเปอร์เซ็นต์
+            const totalPercentage = percentageItems.reduce((sum, item) => sum + (parseFloat(item.percentage) || 0), 0);
+            
+            // ตรวจสอบว่าผลรวมของเปอร์เซ็นต์เกิน 100% หรือไม่
+            if (totalPercentage > 100) {
+                alertElement.style.display = 'block';
+                alertElement.textContent = 'คำเตือน: ผลรวมของเปอร์เซ็นต์ในสองหมวดสุดท้ายเกิน 100%!';
+            } else {
+                // คำนวณและแสดงสรุปสำหรับสองหมวดสุดท้าย
+                state.categories.slice(3).forEach(category => {
+                    let categoryTotal = 0;
+                    let categoryHtml = `
+                        <div class="p-5 rounded-lg flex flex-col gap-4 bg-gray-50 summary-category border w-full">
+                            <h3 class="headtext w-full">${category.name}</h3>
+                    `;
+        
+                    category.items.forEach(item => {
+                        let itemAmount;
+                        if (item.type === 'fixed') {
+                            itemAmount = item.amount || 0;
+                            categoryHtml += `<div class="text-input flex  border-b pb-2 w-full items-center">
+                                        <p class="w-full  h-fit">${item.name}</p>
+                                        <div class="w-full flex flex-row gap-2 justify-end">
+                                            <p class=" px-3 py-1 rounded-full bg-blue-600 text-white text-sm">จำนวนคงที่</p>
+                                            <div class="flex items-center gap-2">
+                                                <p class="h-fit ">${itemAmount.toFixed(2)}</p>
+                                                <p class=" h-fit">บาท</p>                                    
+                                            </div>
+                                        </div>
+                                    </div> `;
+                        } else {
+                            itemAmount = (item.percentage / 100) * remainingAfterFixed;
+                            categoryHtml += `<div class="text-input flex  border-b pb-2 w-full items-center">
+                                        <p class="w-full h-fit">${item.name}</p>
+                                        <div class="flex flex-row gap-2 items-center">
+                                            <p class="h-fit px-3 py-1 rounded-full bg-emerald-500 text-white text-sm">${item.percentage}%</p>
+                                            <p class="h-fit"> ${itemAmount.toFixed(2)}</p>
+                                            <p class="h-fit">บาท</p>                                    
+                                        </div>
+                                    </div> `;
+                        }
+                        categoryTotal += itemAmount;
+                    });
+                    
+                    categoryHtml += `<p class="headtext flex w-full justify-end">รวม: ${categoryTotal.toFixed(2)} บาท</p></div>`;
+                    summary.push(categoryHtml);
+                    chartData.push({ name: category.name, value: categoryTotal, color: category.color });
                 });
-    
-                categoryHtml += `<p><strong>รวม: ${categoryTotal.toFixed(2)} บาท</strong></p></div>`;
-                summary.push(categoryHtml);
-                chartData.push({ name: category.name, value: categoryTotal, color: category.color });
-            });
+            }
         }
     
         document.getElementById('summary').innerHTML = summary.join('');
@@ -212,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
             state.salary = parsedData.salary;
             state.categories = parsedData.categories;
             document.getElementById('salary').value = state.salary;
-            renderCategories();
+            state.categories.forEach((_, index) => renderItems(index));
             calculate();
         }
     }
@@ -229,7 +249,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('salary').addEventListener('input', calculate);
     document.getElementById('saveButton').addEventListener('click', saveData);
 
-    // เพิ่มฟังก์ชันใหม่สำหรับการบันทึกสถิติ
     const saveStatsButton = document.getElementById('saveStatsButton');
     const saveStatsModal = document.getElementById('saveStatsModal');
     const confirmSaveStats = document.getElementById('confirmSaveStats');
@@ -275,10 +294,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const statElement = document.createElement('div');
             statElement.className = 'saved-stat';
             statElement.innerHTML = `
-                <h3>${stat.monthName}</h3>
-                <p>บันทึกเมื่อ: ${new Date(stat.date).toLocaleString()}</p>
-                <button onclick="viewSavedStat(${index})">ดู</button>
-                <button onclick="deleteSavedStat(${index})">ลบ</button>
+                <div class="flex flex-row mb-4 border-b pb-3  ">
+                    <h3 class="w-full">${stat.monthName}</h3>
+                    <p class="w-full" >บันทึกเมื่อ: ${new Date(stat.date).toLocaleString()}</p>
+                    <div class="flex w-fit justify-end item-end gap-6">
+                        <button onclick="viewSavedStat(${index})">ดู</button>
+                        <button onclick="deleteSavedStat(${index})">ลบ</button>
+                    </div>
+                </div>
             `;
             savedStatsList.appendChild(statElement);
         });
@@ -288,7 +311,75 @@ document.addEventListener('DOMContentLoaded', function() {
         const savedStats = JSON.parse(localStorage.getItem('savedStats') || '[]');
         const stat = savedStats[index];
         
-        document.getElementById('summary').innerHTML = stat.summaryHTML;
+        // แสดงชื่อเดือนที่กำลังดู
+        const summaryElement = document.getElementById('summary');
+        summaryElement.innerHTML = `<h2 class="headtext mb-4">สรุปของเดือน: ${stat.monthName}</h2>` + stat.summaryHTML;
+        
+        // แก้ไขสไตล์ของกล่องสรุปและรายการย่อยให้เหมือนหน้าปกติ
+        const summaryCategories = summaryElement.querySelectorAll('.summary-category');
+        summaryCategories.forEach(category => {
+            category.className = 'p-5 rounded-lg flex flex-col gap-4 bg-gray-50 summary-category border w-full';
+            
+            // ปรับแต่งหัวข้อหมวดหมู่
+            const categoryTitle = category.querySelector('h3');
+            if (categoryTitle) {
+                categoryTitle.className = 'headtext w-full';
+            }
+    
+            // ปรับแต่งรายการย่อย
+            const items = category.querySelectorAll('.text-input');
+            items.forEach(item => {
+                item.className = 'text-input flex border-b pb-2 w-full items-center ';
+                
+                // ปรับแต่งชื่อรายการ
+                const itemName = item.querySelector('p:first-child');
+                if (itemName) {
+                    itemName.className = 'w-full h-fit ';
+                }
+    
+                // ปรับแต่งส่วนแสดงจำนวนเงินและเปอร์เซ็นต์
+                const itemValueContainer = item.querySelector('div:last-child');
+                if (itemValueContainer) {
+                    itemValueContainer.className = 'w-full flex flex-row gap-2 justify-end bg-green-500';
+    
+                    // ปรับแต่ง label จำนวนคงที่หรือเปอร์เซ็นต์
+                    const label = itemValueContainer.querySelector('p:first-child');
+                    if (label) {
+                        if (label.textContent.includes('%')) {
+                            label.className = 'h-fit px-3 py-1 rounded-full bg-emerald-500 text-white text-sm';
+                        } else {
+                            label.className = 'px-3 py-1 rounded-full bg-blue-600 text-white text-sm';
+                        }
+                    }
+    
+                    // ปรับแต่งส่วนแสดงจำนวนเงิน
+                    const amountContainer = itemValueContainer.querySelector('div:last-child');
+                    if (amountContainer) {
+                        amountContainer.className = 'flex items-center gap-2';
+                    }
+                }
+            });
+    
+            // ปรับแต่งยอดรวมของหมวดหมู่
+            const categoryTotal = category.querySelector('p:last-child');
+            if (categoryTotal) {
+                categoryTotal.className = 'headtext  flex w-full justify-end';
+            }
+        });
+    
+        // ปรับแต่งส่วนแสดงยอดคงเหลือ
+        const remainingElement = summaryElement.querySelector('.place-items-center');
+        if (remainingElement) {
+            remainingElement.className = 'place-items-center p-5 flex flex-col gap-4 bg-emerald-50 border rounded border-emerald-600';
+            const remainingTitle = remainingElement.querySelector('h3');
+            if (remainingTitle) {
+                remainingTitle.className = 'headtext-remain';
+            }
+            const remainingAmount = remainingElement.querySelector('p');
+            if (remainingAmount) {
+                remainingAmount.className = 'subtext-remain';
+            }
+        }
         
         if (window.myPieChart) {
             window.myPieChart.destroy();
@@ -304,11 +395,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 plugins: {
                     legend: {
                         position: 'bottom'
+                    },
+                    title: {
+                        display: true,
+                        text: `ยอดรวมค่าใช้จ่าย (5 หมวด): ${calculateTotalExpenses(stat.chartData).toFixed(2)} บาท`
                     }
                 }
             }
         });
     };
+    
+    // ฟังก์ชันช่วยคำนวณยอดรวมค่าใช้จ่าย
+    function calculateTotalExpenses(chartData) {
+        return chartData.datasets[0].data.reduce((sum, value) => sum + value, 0);
+    }
 
     window.deleteSavedStat = function(index) {
         if (confirm('คุณแน่ใจหรือไม่ที่จะลบสถิตินี้?')) {
@@ -319,9 +419,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
 
-// เรียกใช้ฟังก์ชันเหล่านี้เพื่อเริ่มต้นการทำงาน
-loadSavedData();
-renderCategories();
-calculate();
-renderSavedStatsList();
+    // เรียกใช้ฟังก์ชันเหล่านี้เพื่อเริ่มต้นการทำงาน
+    loadSavedData();
+    state.categories.forEach((_, index) => renderItems(index));
+    calculate();
+    renderSavedStatsList();
 });
