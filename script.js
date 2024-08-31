@@ -340,7 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // ปรับแต่งส่วนแสดงจำนวนเงินและเปอร์เซ็นต์
                 const itemValueContainer = item.querySelector('div:last-child');
                 if (itemValueContainer) {
-                    itemValueContainer.className = 'w-full flex flex-row gap-2 justify-end bg-green-500';
+                    itemValueContainer.className = 'w-full flex flex-row gap-2 justify-end ';
     
                     // ปรับแต่ง label จำนวนคงที่หรือเปอร์เซ็นต์
                     const label = itemValueContainer.querySelector('p:first-child');
@@ -363,7 +363,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // ปรับแต่งยอดรวมของหมวดหมู่
             const categoryTotal = category.querySelector('p:last-child');
             if (categoryTotal) {
-                categoryTotal.className = 'headtext  flex w-full justify-end';
+                categoryTotal.className = 'headtext  flex  justify-end';
             }
         });
     
