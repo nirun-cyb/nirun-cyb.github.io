@@ -1,3 +1,15 @@
+@font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url(/LINE_Seed_Sans_TH_V1.003/Web/WOFF2/LINESeedSansTH_W_Rg.woff2);
+    font-weight: 500;
+}
+@font-face {
+    font-family: "LINE Seed Sans TH";
+    src: url(/LINE_Seed_Sans_TH_V1.003/Web/WOFF2/LINESeedSansTH_W_Bd.woff2);
+    font-weight: 700;
+}
+
+
 .headtext {
     color: #101828;
     font-family: "LINE Seed Sans TH";
@@ -10,9 +22,9 @@
 .subtext {
     color: var(--colors-text-text-tertiary-600, #475467);
     font-family: "LINE Seed Sans TH";
-    font-size: var(--Font-size-text-sm, 14px);
+    font-size: 14px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500 !important;
     line-height: var(--Line-height-text-sm, 20px); /* 142.857% */
 }
 
@@ -46,4 +58,23 @@ line-height: var(--Line-height-text-md, 24px); /* 150% */
     font-size: 16px;
     font-weight: 700;
     color: rgb(22, 88, 58);
+}
+
+.text {
+    color: #101828;
+    font-family: "LINE Seed Sans TH";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px; /* 150% */ 
+}
+
+
+.text-button-sm {
+    color: #ffffff;
+    font-family: "LINE Seed Sans TH";
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 16px; /* 150% */ 
 }

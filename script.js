@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', function() {
             itemElement.innerHTML = `
                 <div class="w-full space-y-3">
                     <input type="text" class="text-input border py-3 px-4 block w-full border-gray-200 rounded-lg  focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
-                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    disabled:pointer-events-none " 
                     placeholder="ชื่อรายการ" value="${item.name}" onchange="updateItem(${categoryIndex}, ${itemIndex}, 'name', this.value)">
                 </div>
                 ${state.categories[categoryIndex].allowPercentage ? `
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ` : ''}
                 <div class="w-full">
                     <input type="text" class="text-input border py-3 px-4 block w-full border-gray-200 rounded-lg  focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 
-                    disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600" 
+                    disabled:pointer-events-none " 
                     placeholder="This is placeholder" value="${item.type === 'percentage' ? item.percentage : item.amount}" 
                        onchange="updateItem(${categoryIndex}, ${itemIndex}, '${item.type === 'percentage' ? 'percentage' : 'amount'}', parseFloat(this.value) || 0)">
                 </div>    
@@ -294,12 +294,22 @@ document.addEventListener('DOMContentLoaded', function() {
             const statElement = document.createElement('div');
             statElement.className = 'saved-stat';
             statElement.innerHTML = `
-                <div class="flex flex-row mb-4 border-b pb-3  ">
-                    <h3 class="w-full">${stat.monthName}</h3>
-                    <p class="w-full" >บันทึกเมื่อ: ${new Date(stat.date).toLocaleString()}</p>
-                    <div class="flex w-fit justify-end item-end gap-6">
-                        <button onclick="viewSavedStat(${index})">ดู</button>
-                        <button onclick="deleteSavedStat(${index})">ลบ</button>
+                <div class="flex flex-row mb-4 border-b pb-3 items-center ">
+                    <h3 class="text w-fit px-10">${stat.monthName}</h3>
+                    <p class="w-full px-10 subtext " >บันทึกเมื่อ: ${new Date(stat.date).toLocaleString()}</p>
+                    <div class="flex w-fit justify-end item-end gap-4 ">
+
+                        <button onclick="viewSavedStat(${index})"  type="button fill-white"
+                            class=" flex shrink-0 justify-center items-center gap-2 size-[40px] text-sm font-medium 
+                            rounded-lg border border-transparent bg-white text-white hover:bg-gray-100">
+                            <img class="filter-to-white size-[20px]" src="/icon/see.svg" alt="">
+                        </button>
+
+                        <button onclick="deleteSavedStat(${index})"  type="button fill-white"
+                            class=" flex shrink-0 justify-center items-center gap-2 size-[40px] text-sm font-medium 
+                            rounded-lg border border-transparent bg-white text-white hover:bg-gray-100">
+                            <img class="filter-to-white size-[20px]" src="/icon/delete.svg" alt="">
+                        </button>
                     </div>
                 </div>
             `;
@@ -348,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (label.textContent.includes('%')) {
                             label.className = 'h-fit px-3 py-1 rounded-full bg-emerald-500 text-white text-sm';
                         } else {
-                            label.className = 'px-3 py-1 rounded-full bg-blue-600 text-white text-sm';
+                            label.className = 'text-input';
                         }
                     }
     
@@ -363,7 +373,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // ปรับแต่งยอดรวมของหมวดหมู่
             const categoryTotal = category.querySelector('p:last-child');
             if (categoryTotal) {
-                categoryTotal.className = 'headtext  flex  justify-end';
+                categoryTotal.className = 'text-input';
             }
         });
     
